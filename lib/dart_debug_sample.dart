@@ -1,70 +1,58 @@
 import 'package:intl/intl.dart';
 
 class YukymController {
-
   // DateTime.parse(_userData.value!.selectDate)
-  String nowDate = DateFormat('yyyy-mm-dd').format(DateTime.now());
-
-  late String nowTime;
+  String nowDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // 1. 자시의 국 : 갑자1국 = getTyOne()의 값
   String getTyA() {
-    List<YukymTimeModel> timeDataOne =
-    _getTimeDataOne(nowDate);
+    List<YukymTimeModel> timeDataOne = _getTimeDataOne(nowDate);
 
     if (timeDataOne.isNotEmpty) {
-      nowTime = timeDataOne.first.ty1;
-
+      final nowTime = timeDataOne.first.ty1;
       final month = nowDate.substring(5, 7);
-      if (month == '01' || month == '02') {
-        return '경오1국';
-      } else if (month == '03' || month == '04') {
-        return '경오2국';
-      } else if (month == '05' || month == '06') {
-        return '경오3국';
-      } else if (month == '07' || month == '08') {
-        return '경오4국';
-      } else if (month == '09' || month == '10') {
-        return '경오5국';
-      } else if (month == '11' || month == '12') {
-        return '경오6국';
+      final returnList = [
+        '경오1국',
+        '경오2국',
+        '경오3국',
+        '경오4국',
+        '경오5국',
+        '경오6국',
+      ];
+
+      try {
+        final int idx = (int.parse(month) - 1) ~/ 2;
+        return returnList[idx];
+      } catch (e) {
+        return nowTime;
       }
-      return nowTime;
     } else {
       // Handle the case when the list is empty
-      return '경오7국';  // Or any other appropriate action
+      return '경오7국'; // Or any other appropriate action
     }
   }
 
   String getTyB() {
-    List<YukymTimeModel> timeDataOne =
-    _getTimeDataOne(nowDate);
-    String result = timeDataOne.first.ty12;
+    List<YukymTimeModel> timeDataOne = _getTimeDataOne(nowDate);
 
     final nowTime = DateTime.now();
-    if (nowTime.hour >= 0 || nowTime.hour < 2) {
-      return timeDataOne.first.ty1;
-    } else if (nowTime.hour >= 4 || nowTime.hour < 6) {
-      return timeDataOne.first.ty2;
-    } else if (nowTime.hour >= 6 || nowTime.hour < 8) {
-      return timeDataOne.first.ty3;
-    } else if (nowTime.hour >= 8 || nowTime.hour < 10) {
-      return timeDataOne.first.ty4;
-    } else if (nowTime.hour >= 10 || nowTime.hour < 12) {
-      return timeDataOne.first.ty5;
-    } else if (nowTime.hour >= 12 || nowTime.hour < 14) {
-      return timeDataOne.first.ty6;
-    } else if (nowTime.hour >= 16 || nowTime.hour < 18) {
-      return timeDataOne.first.ty7;
-    } else if (nowTime.hour >= 18 || nowTime.hour < 20) {
-      return timeDataOne.first.ty8;
-    } else if (nowTime.hour >= 20 || nowTime.hour < 22) {
-      return timeDataOne.first.ty9;
-    } else if (nowTime.hour >= 22 || nowTime.hour < 24) {
-      return timeDataOne.first.ty10;
-    }
+    List<String> yukymTimeModelList = [
+      timeDataOne.first.ty1,
+      timeDataOne.first.ty2,
+      timeDataOne.first.ty3,
+      timeDataOne.first.ty4,
+      timeDataOne.first.ty5,
+      timeDataOne.first.ty6,
+      timeDataOne.first.ty7,
+      timeDataOne.first.ty8,
+      timeDataOne.first.ty9,
+      timeDataOne.first.ty10,
+      timeDataOne.first.ty11,
+      timeDataOne.first.ty12,
+    ];
 
-    return result;
+    final int timeCondition = nowTime.hour ~/ 2;
+    return yukymTimeModelList[timeCondition];
   }
 
   List<YukymTimeModel> _getTimeDataOne(String nowDate) {
